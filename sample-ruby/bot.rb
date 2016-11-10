@@ -8,10 +8,11 @@ class Bot
   use Rack::ContentType, 'application/json'
 
   post '/event' do
-    if text = request.params['text']
+    begin
+      text = (JSON.parse request.body.read)['text']
       response.status = 201
       { bot: ID, text: text.reverse }.to_json
-    else
+    rescue
       response.status = 417
     end
   end
